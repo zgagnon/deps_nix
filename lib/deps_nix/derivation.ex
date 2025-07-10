@@ -48,6 +48,7 @@ defmodule DepsNix.Derivation do
   def from(%Mix.Dep{scm: Mix.SCM.Git} = dep, options) do
     {:git, url, rev, _} = dep.opts[:lock]
     private = !!dep.opts[:private]
+
     case parse_git_url(url, private) do
       [owner: owner, repo: repo] ->
         IO.puts("Found #{owner}:#{repo} -> Github")
@@ -129,7 +130,7 @@ defmodule DepsNix.Derivation do
          true <- path && String.contains?(url, "github.com"),
          [owner, repo | _] <- String.split(path, "/", trim: true),
          repo <- String.replace_suffix(repo, ".git", "") do
-      [owner: owner,  repo: repo]
+      [owner: owner, repo: repo]
     else
       _ -> url
     end
@@ -138,7 +139,6 @@ defmodule DepsNix.Derivation do
   ## Private github repos don't work with fetchGithub - that defaults to downloading the repo tarball via https
   ## Instead, we need to use fetchgit, so that private keys can be used
   defp parse_git_url(url, _private = true), do: url
-
 
   defp app_config_path(opts) do
     opts.output
