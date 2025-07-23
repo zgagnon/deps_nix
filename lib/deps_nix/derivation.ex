@@ -51,7 +51,6 @@ defmodule DepsNix.Derivation do
 
     case parse_git_url(url, private) do
       [owner: owner, repo: repo] ->
-        IO.puts("Found #{owner}:#{repo} -> Github")
         prefetcher = options.github_prefetcher
 
         {hash, builder} =
@@ -76,7 +75,6 @@ defmodule DepsNix.Derivation do
         )
 
       url ->
-        IO.puts("Found #{url}")
         fetcher = %FetchGit{url: url, rev: rev}
 
         new(dep,
